@@ -61,4 +61,6 @@ dependencies {
 
     implementation 'io.coil-kt:coil-compose:2.2.2'
 
+    debugImplementation "androidx.compose.ui:ui-tooling:$compose_ui_version"
+
 }

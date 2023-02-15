@@ -13,7 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.example.mynotes.ui.common.BottomNav
-import com.example.mynotes.ui.home.ScreenHome
+import com.example.mynotes.ui.screens.ScreenHome
 import com.example.mynotes.ui.theme.MyNotesTheme
 
 

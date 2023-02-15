@@ -1,4 +1,4 @@
-package com.example.mynotes.ui.home
+package com.example.mynotes.ui.screens
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*

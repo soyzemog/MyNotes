@@ -7,8 +7,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.outlined.Search
-import androidx.compose.material.icons.sharp.Search
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -20,7 +18,7 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun SearchBar() {
 
-    var text by remember { mutableStateOf(TextFieldValue("")) }
+    var searchText by remember { mutableStateOf(TextFieldValue("")) }
 
 
     Row(
@@ -28,8 +26,8 @@ fun SearchBar() {
             .fillMaxWidth()
     ) {
         OutlinedTextField(
-            value = text,
-            onValueChange = { text = it },
+            value = searchText,
+            onValueChange = { searchText = it },
             textStyle = TextStyle.Default.copy(
                 color = Color.White,
                 fontSize = 16.sp
