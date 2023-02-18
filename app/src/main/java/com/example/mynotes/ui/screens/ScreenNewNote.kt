@@ -2,12 +2,16 @@ package com.example.mynotes.ui.screens
 
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AddLink
+import androidx.compose.material.icons.filled.AddPhotoAlternate
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -134,38 +138,47 @@ fun ColorPicker() {
             )
             .fillMaxWidth()
             .height(220.dp)
-            .padding(start = 20.dp, top = 8.dp)
     ) {
         Row(modifier = Modifier.fillMaxWidth()) {
-            // Note that Modifier.selectableGroup() is essential to ensure correct accessibility behavior
+
             Column(
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
-                    .selectableGroup()
                     .weight(1f)
+                    .fillMaxSize()
             ) {
-                radioOptions.forEach { color ->
-                    Row(
-                        Modifier
-                            .selectable(
+
+                // Note that Modifier.selectableGroup() is essential to ensure correct accessibility behavior
+                Column(
+                    modifier = Modifier
+                        .selectableGroup()
+                ) {
+                    radioOptions.forEach { color ->
+                        Row(
+                            Modifier
+                                .selectable(
+                                    selected = (color == selectedOption),
+                                    onClick = { onOptionSelected(color) },
+                                    role = Role.RadioButton
+                                )
+                                .padding(8.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            RadioButton(
                                 selected = (color == selectedOption),
-                                onClick = { onOptionSelected(color) },
-                                role = Role.RadioButton
+                                onClick = null, // null recommended for accessibility with screenreaders
+                                colors = RadioButtonDefaults.colors(color.color)
                             )
-                            .padding(8.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        RadioButton(
-                            selected = (color == selectedOption),
-                            onClick = null, // null recommended for accessibility with screenreaders
-                            colors = RadioButtonDefaults.colors(color.color)
-                        )
-                        Text(
-                            text = color.nameColor,
-                            style = MaterialTheme.typography.body2,
-                            modifier = Modifier.padding(start = 8.dp)
-                        )
+                            Text(
+                                text = color.nameColor,
+                                style = MaterialTheme.typography.body2,
+                                modifier = Modifier.padding(start = 8.dp)
+                            )
+                        }
                     }
                 }
+
             }
 
             Column(
@@ -173,7 +186,7 @@ fun ColorPicker() {
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .weight(1f)
-                    .fillMaxHeight()
+                    .fillMaxSize()
             ) {
                 Text(
                     text = "Pick Color",
@@ -197,10 +210,73 @@ fun ImageAndLink() {
             )
             .fillMaxWidth()
             .height(90.dp)
-            .padding(start = 20.dp, top = 8.dp)
     ) {
 
+        Row(modifier = Modifier.fillMaxWidth()) {
 
+            Column(
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxSize()
+            ) {
+                AddImage()
+            }
+
+            Column(
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxSize()
+            ) {
+                AddLink()
+            }
+
+        }
+
+    }
+
+}
+
+
+@Composable
+fun AddImage() {
+    Row(
+        modifier = Modifier.clickable { /*  Open Gallery */ },
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        
+        Icon(
+            imageVector = Icons.Default.AddPhotoAlternate,
+            contentDescription = "add image"
+        )
+
+        Spacer(modifier = Modifier.padding(2.dp))
+        
+        Text(text = "Add Image")
+        
+    }
+}
+
+
+@Composable
+fun AddLink() {
+
+    Row(
+        modifier = Modifier.clickable { /*  Open Modal */ },
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+
+        Icon(
+            imageVector = Icons.Default.AddLink,
+            contentDescription = "add link"
+        )
+
+        Spacer(modifier = Modifier.padding(2.dp))
+
+        Text(text = "Add URL")
 
     }
 
@@ -291,7 +367,7 @@ fun TypeNote() {
 
 
 
-@Preview(device = Devices.PIXEL_2)
+/** @Preview(device = Devices.PIXEL_2)
 @Composable
 fun Preview() {
     Surface(modifier = Modifier.fillMaxSize()) {
@@ -299,4 +375,4 @@ fun Preview() {
         ScreenNewNote()
 
     }
-}
+} **/

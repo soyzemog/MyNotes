@@ -23,7 +23,7 @@ fun BottomNav() {
             icon = {
                 Icon(
                     imageVector = Icons.Default.AddPhotoAlternate,
-                    contentDescription = "add photo",
+                    contentDescription = "add image",
                     tint = Color.White
                 )
             }
