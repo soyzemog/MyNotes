@@ -13,12 +13,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.example.mynotes.ui.common.BottomNav
-import com.example.mynotes.ui.screens.ScreenHome
+import com.example.mynotes.ui.navigation.NavItem
+import com.example.mynotes.ui.navigation.Navigation
 import com.example.mynotes.ui.theme.MyNotesTheme
 
 
 @Composable
 fun AppMyNotes() {
+
+    val appState = rememberAppMyNotesState()
 
     ScreenMyNotes {
 
@@ -36,7 +39,7 @@ fun AppMyNotes() {
             },
             floatingActionButton = {
                 FloatingActionButton(
-                    onClick = { },
+                    onClick = { appState.onNavItemClick(NavItem.NEWNOTE) },
                     backgroundColor = MaterialTheme.colors.primaryVariant
                 ) {
                     Icon(
@@ -59,7 +62,7 @@ fun AppMyNotes() {
             scaffoldState = rememberScaffoldState()
         ) { padding ->
             Box(modifier = Modifier.padding(padding)) {
-                ScreenHome()
+                Navigation(navController = appState.navController)
             }
         }
 

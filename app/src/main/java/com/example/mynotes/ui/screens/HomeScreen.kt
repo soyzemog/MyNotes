@@ -9,7 +9,7 @@ import com.example.mynotes.ui.common.SearchBar
 
 
 @Composable
-fun ScreenHome() {
+fun HomeScreen() {
     Box(
         modifier = Modifier
             .fillMaxSize()

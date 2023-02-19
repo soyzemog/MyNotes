@@ -20,8 +20,6 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.tooling.preview.Devices
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -40,7 +38,7 @@ enum class ColorPick(
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun ScreenNewNote() {
+fun NewNoteScreen() {
 
     val sheetState = rememberBottomSheetState(
         initialValue = BottomSheetValue.Collapsed
