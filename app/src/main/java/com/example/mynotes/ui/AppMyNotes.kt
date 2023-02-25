@@ -1,19 +1,12 @@
 package com.example.mynotes.ui
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.sp
-import com.example.mynotes.ui.common.BottomNav
-import com.example.mynotes.ui.navigation.NavItem
+import com.example.mynotes.ui.component.BottomBar
+import com.example.mynotes.ui.component.FloatingButton
+import com.example.mynotes.ui.component.TopBar
 import com.example.mynotes.ui.navigation.Navigation
 import com.example.mynotes.ui.theme.MyNotesTheme
 
@@ -24,39 +17,20 @@ fun AppMyNotes() {
     val appState = rememberAppMyNotesState()
 
     ScreenMyNotes {
-
         Scaffold(
             topBar = {
-                TopAppBar(
-                    title = {Text(
-                        text = "My Notes",
-                        color = Color.White,
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Bold
-                    )},
-                    backgroundColor = MaterialTheme.colors.background
-                )
+                TopBar(appState)
             },
             floatingActionButton = {
-                FloatingActionButton(
-                    onClick = { appState.onNavItemClick(NavItem.NEWNOTE) },
-                    backgroundColor = MaterialTheme.colors.primaryVariant
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Add,
-                        contentDescription = "Add",
-                        tint = Color.Black
-                    )
+                if (appState.showFloatingButton) {
+                    FloatingButton(appState)
                 }
             },
             floatingActionButtonPosition = FabPosition.End,
             isFloatingActionButtonDocked = true,
             bottomBar = {
-                BottomAppBar(
-                    backgroundColor = MaterialTheme.colors.background,
-                    cutoutShape = CircleShape
-                ) {
-                    BottomNav()
+                if (appState.showBottomBar) {
+                    BottomBar()
                 }
             },
             scaffoldState = rememberScaffoldState()
@@ -65,7 +39,6 @@ fun AppMyNotes() {
                 Navigation(navController = appState.navController)
             }
         }
-
     }
 
 }

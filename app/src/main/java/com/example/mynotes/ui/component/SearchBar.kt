@@ -1,4 +1,4 @@
-package com.example.mynotes.ui.common
+package com.example.mynotes.ui.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row

@@ -25,26 +25,24 @@ class AppMyNotesState(val navController: NavHostController) {
 
     // Properties
 
-    /** BackStackEntry
-     * es el q permite acceder a la ruta actual
-     * Y necesita de una funcion composable para poder usarse (@Composable get()) **/
-
-    /** si viene alguna ruta vacia, devolvemos cadena vacia **/
-    val currentRoute: String
+    private val currentRoute: String
         @Composable get() = navController.currentBackStackEntryAsState().value?.destination?.route ?: ""
 
 
-    /**
-     * muestra boton arrowback
-     */
-    /** val showUpNavigation: Boolean
-        @Composable get() = (
-                currentRoute == NavItem.NEWPLAYER.navCommand.route ||
-                        currentRoute == NavItem.EDIT.navCommand.route
-                ) **/
+    val showTitle: Boolean
+        @Composable get() = currentRoute == NavItem.NOTES.navCommand.route
 
     val showFloatingButton: Boolean
         @Composable get() = currentRoute == NavItem.NOTES.navCommand.route
+
+    val showBottomBar: Boolean
+        @Composable get() = currentRoute == NavItem.NOTES.navCommand.route
+
+    val showUpNavigation: Boolean
+        @Composable get() = currentRoute == NavItem.NEWNOTE.navCommand.route
+
+    val showAction: Boolean
+        @Composable get() = currentRoute == NavItem.NEWNOTE.navCommand.route
 
 
     // Logica de UI

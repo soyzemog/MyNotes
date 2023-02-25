@@ -10,8 +10,10 @@ import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AddLink
-import androidx.compose.material.icons.filled.AddPhotoAlternate
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.outlined.CheckCircle
+import androidx.compose.material.icons.outlined.RadioButtonChecked
+import androidx.compose.material.icons.outlined.RadioButtonUnchecked
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,8 +22,12 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.tooling.preview.Devices
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.mynotes.ui.component.TopBar
 
 
 enum class ColorPick(
@@ -83,15 +89,12 @@ fun BottomSheet() {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .height(380.dp)
+            .height(220.dp)
     ) {
         HeaderSheet()
-        Row(modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 4.dp)) {
-            ColorPicker()
-        }
-        Row(modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp)) {
-            ImageAndLink()
-        }
+        ColorPicker()
+        AddImage()
+        AddLink()
     }
 
 }
@@ -115,7 +118,7 @@ fun HeaderSheet() {
 }
 
 
-@Composable
+/** @Composable
 fun ColorPicker() {
 
     val radioOptions = listOf(
@@ -194,10 +197,68 @@ fun ColorPicker() {
         }
     }
 
+} **/
+
+@Composable
+fun ColorPicker() {
+
+    val radioOptions = listOf(
+        ColorPick.GREEN,
+        ColorPick.RED,
+        ColorPick.YELLOW,
+        ColorPick.CYAN,
+        ColorPick.MAGENTA
+    )
+
+    var selectedItem by remember { mutableStateOf(radioOptions[0]) }
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(40.dp)
+            .padding(start = 16.dp, end = 16.dp, top = 4.dp)
+    ) {
+        Column() {
+            Row(modifier = Modifier.selectableGroup()) {
+                radioOptions.forEach { color ->
+                    Icon(
+                        modifier = Modifier
+                            .padding(end = 16.dp)
+                            .selectable(
+                                selected = (selectedItem == color),
+                                onClick = { selectedItem = color },
+                                role = Role.RadioButton
+                            )
+                            .size(40.dp)
+                        ,
+                        imageVector = if (selectedItem == color)
+                            Icons.Outlined.CheckCircle else
+                            Icons.Outlined.RadioButtonChecked,
+                        contentDescription = color.nameColor,
+                        tint = color.color
+                    )
+                }
+            }
+        }
+        Column(
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxSize()
+        ) {
+            Text(
+                text = "Pick Color",
+                fontSize = 14.sp,
+                textDecoration = TextDecoration.Underline
+            )
+        }
+    }
+
 }
 
 
-@Composable
+/** @Composable
 fun ImageAndLink() {
 
     Box(
@@ -236,24 +297,30 @@ fun ImageAndLink() {
 
     }
 
-}
+} **/
 
 
 @Composable
 fun AddImage() {
     Row(
-        modifier = Modifier.clickable { /*  Open Gallery */ },
+        modifier = Modifier
+            .padding(start = 16.dp, top = 20.dp)
+            .clickable { /*  Open Gallery */ },
         verticalAlignment = Alignment.CenterVertically
     ) {
         
         Icon(
             imageVector = Icons.Default.AddPhotoAlternate,
-            contentDescription = "add image"
+            contentDescription = "add image",
+            modifier = Modifier.size(36.dp)
         )
 
-        Spacer(modifier = Modifier.padding(2.dp))
+        Spacer(modifier = Modifier.padding(6.dp))
         
-        Text(text = "Add Image")
+        Text(
+            text = "Add Image",
+            fontSize = 14.sp
+        )
         
     }
 }
@@ -263,18 +330,24 @@ fun AddImage() {
 fun AddLink() {
 
     Row(
-        modifier = Modifier.clickable { /*  Open Modal */ },
+        modifier = Modifier
+            .padding(start = 16.dp, top = 20.dp)
+            .clickable { /*  Open Modal */ },
         verticalAlignment = Alignment.CenterVertically
     ) {
 
         Icon(
-            imageVector = Icons.Default.AddLink,
-            contentDescription = "add link"
+            imageVector = Icons.Default.Language,
+            contentDescription = "add link",
+            modifier = Modifier.size(36.dp)
         )
 
-        Spacer(modifier = Modifier.padding(2.dp))
+        Spacer(modifier = Modifier.padding(6.dp))
 
-        Text(text = "Add URL")
+        Text(
+            text = "Add URL",
+            fontSize = 14.sp
+        )
 
     }
 
@@ -370,7 +443,7 @@ fun TypeNote() {
 fun Preview() {
     Surface(modifier = Modifier.fillMaxSize()) {
 
-        ScreenNewNote()
+        NewNoteScreen()
 
     }
 } **/

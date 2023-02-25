@@ -4,8 +4,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.mynotes.ui.common.Grid
-import com.example.mynotes.ui.common.SearchBar
+import com.example.mynotes.ui.component.Grid
+import com.example.mynotes.ui.component.SearchBar
 
 
 @Composable
