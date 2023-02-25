@@ -13,7 +13,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.CheckCircle
 import androidx.compose.material.icons.outlined.RadioButtonChecked
-import androidx.compose.material.icons.outlined.RadioButtonUnchecked
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -23,11 +22,10 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.tooling.preview.Devices
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.mynotes.ui.component.TopBar
+import com.example.mynotes.ui.component.CustomDialog
+import com.example.mynotes.ui.component.IconAddLink
 
 
 enum class ColorPick(
@@ -329,26 +327,19 @@ fun AddImage() {
 @Composable
 fun AddLink() {
 
+    var showModal by remember { mutableStateOf(false) }
+
     Row(
         modifier = Modifier
             .padding(start = 16.dp, top = 20.dp)
-            .clickable { /*  Open Modal */ },
+            .clickable { showModal = true },
         verticalAlignment = Alignment.CenterVertically
     ) {
+        IconAddLink(Color.DarkGray)
+    }
 
-        Icon(
-            imageVector = Icons.Default.Language,
-            contentDescription = "add link",
-            modifier = Modifier.size(36.dp)
-        )
-
-        Spacer(modifier = Modifier.padding(6.dp))
-
-        Text(
-            text = "Add URL",
-            fontSize = 14.sp
-        )
-
+    CustomDialog(showModal) {
+        showModal = false
     }
 
 }
