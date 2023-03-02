@@ -1,6 +1,13 @@
 package com.example.mynotes.ui.screens
 
 
+import android.graphics.Bitmap
+import android.graphics.ImageDecoder
+import android.net.Uri
+import android.os.Build
+import android.provider.MediaStore
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -8,6 +15,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -16,7 +24,10 @@ import androidx.compose.material.icons.outlined.RadioButtonChecked
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -26,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.mynotes.ui.component.CustomDialog
 import com.example.mynotes.ui.component.IconAddLink
+import com.example.mynotes.ui.component.TextDate
 
 
 enum class ColorPick(
@@ -300,10 +312,42 @@ fun ImageAndLink() {
 
 @Composable
 fun AddImage() {
+
+    var imageUri by remember { mutableStateOf<Uri?>(null) }
+    val context = LocalContext.current
+    val bitmap = remember { mutableStateOf<Bitmap?>(null) }
+
+    val launcher =
+        rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.GetContent()
+        ) { uri: Uri? ->
+            imageUri = uri
+        }
+
+    imageUri?.let {
+        if (Build.VERSION.SDK_INT < 28) {
+            bitmap.value = MediaStore.Images
+                .Media.getBitmap(context.contentResolver, it)
+        } else {
+            val source = ImageDecoder.createSource(context.contentResolver, it)
+            bitmap.value = ImageDecoder.decodeBitmap(source)
+        }
+    }
+
+    /** bitmap.value?.let { btm ->
+        Image(
+            bitmap = btm.asImageBitmap(),
+            contentDescription = null,
+            modifier = Modifier
+                .size(400.dp)
+                .padding(20.dp)
+        )
+    } **/
+
     Row(
         modifier = Modifier
             .padding(start = 16.dp, top = 20.dp)
-            .clickable { /*  Open Gallery */ },
+            .clickable { launcher.launch("image/*") },
         verticalAlignment = Alignment.CenterVertically
     ) {
         
@@ -348,29 +392,36 @@ fun AddLink() {
 @Composable
 fun NoteTitle() {
 
-    var noteTitle by remember { mutableStateOf(TextFieldValue("")) }
-
-
-    TextField(
+    var noteTitle by remember { mutableStateOf("") }
+    
+    BasicTextField(
         value = noteTitle,
-        onValueChange = { noteTitle = it },
+        onValueChange = { newText ->
+            noteTitle = newText
+        },
         textStyle = TextStyle(
+            fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
-            fontSize = 24.sp
+            color = Color.White
         ),
-        placeholder = { Text(
-            text = "Note Title",
-            color = Color.LightGray
-        ) },
-        modifier = Modifier.fillMaxWidth()
+        cursorBrush = SolidColor(MaterialTheme.colors.primaryVariant),
+        decorationBox = { innerTextField ->
+            if (noteTitle.isEmpty()) {
+                Text(
+                    text = "Note Title",
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Normal,
+                    color = Color.LightGray
+                )
+            }
+            innerTextField()
+        }
+
     )
 
     Spacer(modifier = Modifier.padding(4.dp))
 
-    Text(
-        text = "Lunes, 10-01-2022 10:10 AM",
-        fontSize = 12.sp
-    )
+    TextDate()
 
 }
 
