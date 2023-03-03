@@ -24,14 +24,12 @@ import androidx.compose.material.icons.outlined.RadioButtonChecked
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -415,7 +413,8 @@ fun NoteTitle() {
                 )
             }
             innerTextField()
-        }
+        },
+        maxLines = 2
 
     )
 
@@ -428,7 +427,56 @@ fun NoteTitle() {
 @Composable
 fun NoteSubtitle() {
 
-    var noteSubTitle by remember { mutableStateOf(TextFieldValue("")) }
+    var noteSubTitle by remember { mutableStateOf("") }
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(56.dp)
+    ) {
+        Box(modifier = Modifier
+            .height(56.dp)
+            .width(10.dp)
+            .background(Color.Green, RoundedCornerShape(6.dp))
+        )
+
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(56.dp)
+                .padding(start = 8.dp),
+            verticalArrangement = Arrangement.Center
+        ) {
+
+            BasicTextField(
+                value = noteSubTitle,
+                onValueChange = { newText ->
+                    noteSubTitle = newText
+                },
+                textStyle = TextStyle(
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White
+                ),
+                cursorBrush = SolidColor(MaterialTheme.colors.primaryVariant),
+                decorationBox = { innerTextField ->
+                    if (noteSubTitle.isEmpty()) {
+                        Text(
+                            text = "Note Subtitle",
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Normal,
+                            color = Color.LightGray
+                        )
+                    }
+                    innerTextField()
+                },
+                singleLine = true
+            )
+
+        }
+    }
+
+    /** var noteSubTitle by remember { mutableStateOf(TextFieldValue("")) }
 
     Row(
         modifier = Modifier
@@ -454,31 +502,38 @@ fun NoteSubtitle() {
                 .fillMaxWidth()
         )
 
-    }
+    } **/
 }
 
 @Composable
 fun TypeNote() {
 
-    var note by remember { mutableStateOf(TextFieldValue("")) }
+    var note by remember { mutableStateOf("") }
 
-    TextField(
+    BasicTextField(
         value = note,
-        onValueChange = { note = it },
+        onValueChange = { newText ->
+            note = newText
+        },
         textStyle = TextStyle(
-            fontSize = 14.sp
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color.White
         ),
-        placeholder = { Text(
-            text = "Type note here..",
-            color = Color.LightGray
-        ) },
-        modifier = Modifier
-            .fillMaxSize()
-            .aspectRatio(1f)
+        cursorBrush = SolidColor(MaterialTheme.colors.primaryVariant),
+        decorationBox = { innerTextField ->
+            if (note.isEmpty()) {
+                Text(
+                    text = "Type note here..",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Normal,
+                    color = Color.LightGray
+                )
+            }
+            innerTextField()
+        }
     )
 }
-
-
 
 /** @Preview(device = Devices.PIXEL_2)
 @Composable
