@@ -97,9 +97,11 @@ fun BottomSheet() {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .height(220.dp)
+            .height(236.dp)
+            .background(MaterialTheme.colors.onBackground)
     ) {
         HeaderSheet()
+        Spacer(modifier = Modifier.padding(8.dp))
         ColorPicker()
         AddImage()
         AddLink()
@@ -113,14 +115,14 @@ fun HeaderSheet() {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .height(50.dp)
-            .background(MaterialTheme.colors.primary),
+            .height(50.dp),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
             text = "Miscellaneous",
-            style = MaterialTheme.typography.h6
+            style = MaterialTheme.typography.h6,
+            color = Color.White
         )
     }
 }
@@ -224,7 +226,7 @@ fun ColorPicker() {
         modifier = Modifier
             .fillMaxWidth()
             .height(40.dp)
-            .padding(start = 16.dp, end = 16.dp, top = 4.dp)
+            .padding(start = 16.dp, end = 16.dp)
     ) {
         Column() {
             Row(modifier = Modifier.selectableGroup()) {
@@ -258,7 +260,8 @@ fun ColorPicker() {
             Text(
                 text = "Pick Color",
                 fontSize = 14.sp,
-                textDecoration = TextDecoration.Underline
+                textDecoration = TextDecoration.Underline,
+                color = MaterialTheme.colors.onPrimary
             )
         }
     }
@@ -352,14 +355,16 @@ fun AddImage() {
         Icon(
             imageVector = Icons.Default.AddPhotoAlternate,
             contentDescription = "add image",
-            modifier = Modifier.size(36.dp)
+            modifier = Modifier.size(36.dp),
+            tint = MaterialTheme.colors.onPrimary
         )
 
         Spacer(modifier = Modifier.padding(6.dp))
         
         Text(
             text = "Add Image",
-            fontSize = 14.sp
+            fontSize = 14.sp,
+            color = MaterialTheme.colors.onPrimary
         )
         
     }
@@ -377,7 +382,7 @@ fun AddLink() {
             .clickable { showModal = true },
         verticalAlignment = Alignment.CenterVertically
     ) {
-        IconAddLink(Color.DarkGray)
+        IconAddLink(MaterialTheme.colors.onPrimary)
     }
 
     CustomDialog(showModal) {
@@ -409,13 +414,12 @@ fun NoteTitle() {
                     text = "Note Title",
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Normal,
-                    color = Color.LightGray
+                    color = MaterialTheme.colors.onPrimary
                 )
             }
             innerTextField()
         },
         maxLines = 2
-
     )
 
     Spacer(modifier = Modifier.padding(4.dp))
@@ -465,12 +469,12 @@ fun NoteSubtitle() {
                             text = "Note Subtitle",
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Normal,
-                            color = Color.LightGray
+                            color = MaterialTheme.colors.onPrimary
                         )
                     }
                     innerTextField()
                 },
-                singleLine = true
+                maxLines = 2
             )
 
         }
@@ -527,7 +531,7 @@ fun TypeNote() {
                     text = "Type note here..",
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Normal,
-                    color = Color.LightGray
+                    color = MaterialTheme.colors.onPrimary
                 )
             }
             innerTextField()

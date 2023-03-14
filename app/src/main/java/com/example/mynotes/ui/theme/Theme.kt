@@ -15,9 +15,11 @@ private val DarkColorPalette = darkColors(
 private val LightColorPalette = lightColors(
     primary = Purple500,
     primaryVariant = MyYellow,
-    secondary = Teal200,
-    background = DarkGray,
-    onSecondary = DarkGrayTwo
+    secondary = SearchBarColor,
+    background = BackgroundColorDarkGray,
+    onSecondary = DarkGrayTwo,
+    onBackground = SheetColor,
+    onPrimary = LetterColorGray,
 
     /* Other default colors to override
     background = Color.White,
