@@ -4,8 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.*
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.mynotes.ui.screens.HomeScreen
-import com.example.mynotes.ui.screens.NewNoteScreen
+import com.example.mynotes.ui.screens.home.NotesScreen
+import com.example.mynotes.ui.screens.note.NewNoteScreen
 
 @Composable
 fun Navigation(navController: NavHostController) {
@@ -28,7 +28,7 @@ private fun NavGraphBuilder.notesNav(navController: NavHostController) {
 
         composable(NavCommand.ContentType(Feature.NOTES)) {
 
-            HomeScreen()
+            NotesScreen()
 
         }
     }

@@ -1,4 +1,4 @@
-package com.example.mynotes.ui.screens
+package com.example.mynotes.ui.screens.note
 
 
 import android.graphics.Bitmap

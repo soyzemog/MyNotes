@@ -17,15 +17,15 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.mynotes.R
+import com.example.mynotes.data.domain.Note
 
 @Composable
 fun NoteItem(note: Note) {
 
     Card(
-        modifier = Modifier
-            .clickable { },
+        modifier = Modifier.clickable { },
         shape = MaterialTheme.shapes.large,
-        backgroundColor = note.color
+        backgroundColor = Color(note.color!!)
     ) {
         Column(
             modifier = Modifier
@@ -33,25 +33,14 @@ fun NoteItem(note: Note) {
                 .padding(bottom = 10.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            /** Image(
-                painter = rememberAsyncImagePainter(painterResource(id = R.drawable.ic_launcher_foreground)),
-                contentDescription = "note item",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .background(Color.LightGray)
-                    .fillMaxWidth()
-                    .aspectRatio(1f)
-                    .clickable(onClick = { })
-            ) **/
-            if (note.image) {
+            if (note.image?.isNotEmpty() == true) {
                 Image(
                     painter = painterResource(id = R.drawable.ic_launcher_foreground),
                     contentDescription = "image",
                     modifier = Modifier
                         .background(Color.LightGray)
                         .fillMaxWidth()
-                        .height(note.size.dp)
-
+                        .height(note.size!!.dp)
                 )
             }
             Column(
@@ -61,25 +50,24 @@ fun NoteItem(note: Note) {
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = note.title,
+                    text = note.title.toString(),
                     fontWeight = FontWeight.Bold,
                     fontSize = 24.sp,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )
                 Text(
-                    text = note.subtitle,
+                    text = note.subtitle.toString(),
                     fontSize = 16.sp,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
                 Text(
-                    text = note.date,
+                    text = note.date.toString(),
                     fontSize = 10.sp,
                     maxLines = 2
                 )
             }
         }
     }
-
 }
