@@ -46,11 +46,10 @@ class NotesViewModel @Inject constructor(
         }
     }
 
+    data class UiState(
+        val loading: Boolean = false,
+        val showMessage: String = "",
+        var items: List<Note> = emptyList()
+    )
+
 }
-
-
-data class UiState(
-    val loading: Boolean = false,
-    val showMessage: String = "",
-    var items: List<Note> = emptyList()
-)

@@ -33,6 +33,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.mynotes.ui.component.CustomDialog
 import com.example.mynotes.ui.component.IconAddLink
 import com.example.mynotes.ui.component.TextDate
@@ -42,17 +43,22 @@ enum class ColorPick(
     val color: Color,
     val nameColor: String
 ) {
-    GREEN(Color.Green, "Green"),
-    RED(Color.Red, "Red"),
-    YELLOW(Color.Yellow, "Yellow"),
-    CYAN(Color.Cyan, "Cyan"),
-    MAGENTA(Color.Magenta, "Magenta")
+    GREEN(Color.Green, "green"),
+    RED(Color.Red, "red"),
+    YELLOW(Color.Yellow, "yellow"),
+    CYAN(Color.Cyan, "cyan"),
+    MAGENTA(Color.Magenta, "magenta")
 }
 
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun NewNoteScreen() {
+fun NewNoteScreen(
+    viewModel: NewNoteViewModel = hiltViewModel()
+) {
+
+    val state by viewModel.state.collectAsState()
+
 
     val sheetState = rememberBottomSheetState(
         initialValue = BottomSheetValue.Collapsed
@@ -63,7 +69,11 @@ fun NewNoteScreen() {
 
     BottomSheetScaffold(
         sheetContent = {
-            BottomSheet()
+            //BottomSheet(state, viewModel)
+            BottomSheet(
+                miscellaneous = state.miscellaneous,
+                onAction = { viewModel.onColorPickChange(it) }
+            )
         },
         sheetPeekHeight = 50.dp,
         sheetShape = RoundedCornerShape(16.dp),
@@ -80,7 +90,7 @@ fun NewNoteScreen() {
             }
 
             item {
-                NoteSubtitle()
+                NoteSubtitle(noteSubTitle = state.subtitle)
             }
 
             item {
@@ -92,8 +102,10 @@ fun NewNoteScreen() {
 }
 
 @Composable
-fun BottomSheet() {
-
+fun BottomSheet(
+    miscellaneous: MiscellaneousOptions,
+    onAction: (MiscellaneousOptionsAction) -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -102,11 +114,10 @@ fun BottomSheet() {
     ) {
         HeaderSheet()
         Spacer(modifier = Modifier.padding(8.dp))
-        ColorPicker()
+        ColorPicker(miscellaneous, onAction)
         AddImage()
         AddLink()
     }
-
 }
 
 
@@ -128,100 +139,11 @@ fun HeaderSheet() {
 }
 
 
-/** @Composable
-fun ColorPicker() {
-
-    val radioOptions = listOf(
-        ColorPick.GREEN,
-        ColorPick.RED,
-        ColorPick.YELLOW,
-        ColorPick.CYAN,
-        ColorPick.MAGENTA
-    )
-
-    val (selectedOption, onOptionSelected) = remember { mutableStateOf(radioOptions[0]) }
-
-    Box(
-        modifier = Modifier
-            .background(
-                color = Color.LightGray,
-                shape = RoundedCornerShape(16.dp)
-            )
-            .fillMaxWidth()
-            .height(220.dp)
-    ) {
-        Row(modifier = Modifier.fillMaxWidth()) {
-
-            Column(
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxSize()
-            ) {
-
-                // Note that Modifier.selectableGroup() is essential to ensure correct accessibility behavior
-                Column(
-                    modifier = Modifier
-                        .selectableGroup()
-                ) {
-                    radioOptions.forEach { color ->
-                        Row(
-                            Modifier
-                                .selectable(
-                                    selected = (color == selectedOption),
-                                    onClick = { onOptionSelected(color) },
-                                    role = Role.RadioButton
-                                )
-                                .padding(8.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            RadioButton(
-                                selected = (color == selectedOption),
-                                onClick = null, // null recommended for accessibility with screenreaders
-                                colors = RadioButtonDefaults.colors(color.color)
-                            )
-                            Text(
-                                text = color.nameColor,
-                                style = MaterialTheme.typography.body2,
-                                modifier = Modifier.padding(start = 8.dp)
-                            )
-                        }
-                    }
-                }
-
-            }
-
-            Column(
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxSize()
-            ) {
-                Text(
-                    text = "Pick Color",
-                    style = MaterialTheme.typography.body1
-                )
-            }
-        }
-    }
-
-} **/
-
 @Composable
-fun ColorPicker() {
-
-    val radioOptions = listOf(
-        ColorPick.GREEN,
-        ColorPick.RED,
-        ColorPick.YELLOW,
-        ColorPick.CYAN,
-        ColorPick.MAGENTA
-    )
-
-    var selectedItem by remember { mutableStateOf(radioOptions[0]) }
-
+fun ColorPicker(
+    miscellaneous: MiscellaneousOptions,
+    onAction: (MiscellaneousOptionsAction) -> Unit
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -230,18 +152,18 @@ fun ColorPicker() {
     ) {
         Column() {
             Row(modifier = Modifier.selectableGroup()) {
-                radioOptions.forEach { color ->
+                miscellaneous.radioOptions.forEach { color ->
                     Icon(
                         modifier = Modifier
                             .padding(end = 16.dp)
                             .selectable(
-                                selected = (selectedItem == color),
-                                onClick = { selectedItem = color },
+                                selected = (miscellaneous.selectedOption == color),
+                                onClick = { onAction(MiscellaneousOptionsAction.OnPickColorClick(color)) },
                                 role = Role.RadioButton
                             )
                             .size(40.dp)
                         ,
-                        imageVector = if (selectedItem == color)
+                        imageVector = if (miscellaneous.selectedOption == color)
                             Icons.Outlined.CheckCircle else
                             Icons.Outlined.RadioButtonChecked,
                         contentDescription = color.nameColor,
@@ -267,48 +189,6 @@ fun ColorPicker() {
     }
 
 }
-
-
-/** @Composable
-fun ImageAndLink() {
-
-    Box(
-        modifier = Modifier
-            .background(
-                color = Color.LightGray,
-                shape = RoundedCornerShape(16.dp)
-            )
-            .fillMaxWidth()
-            .height(90.dp)
-    ) {
-
-        Row(modifier = Modifier.fillMaxWidth()) {
-
-            Column(
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxSize()
-            ) {
-                AddImage()
-            }
-
-            Column(
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxSize()
-            ) {
-                AddLink()
-            }
-
-        }
-
-    }
-
-} **/
 
 
 @Composable
@@ -429,9 +309,9 @@ fun NoteTitle() {
 }
 
 @Composable
-fun NoteSubtitle() {
+fun NoteSubtitle(noteSubTitle: SubtitleNote) {
 
-    var noteSubTitle by remember { mutableStateOf("") }
+    //var noteSubTitle by remember { mutableStateOf("") }
 
     Row(
         modifier = Modifier
@@ -441,7 +321,7 @@ fun NoteSubtitle() {
         Box(modifier = Modifier
             .height(56.dp)
             .width(10.dp)
-            .background(Color.Green, RoundedCornerShape(6.dp))
+            .background(noteSubTitle.colorBox.color, RoundedCornerShape(6.dp))
         )
 
         Column(
@@ -453,9 +333,9 @@ fun NoteSubtitle() {
         ) {
 
             BasicTextField(
-                value = noteSubTitle,
+                value = noteSubTitle.subtitle,
                 onValueChange = { newText ->
-                    noteSubTitle = newText
+                    noteSubTitle.subtitle = newText
                 },
                 textStyle = TextStyle(
                     fontSize = 16.sp,
@@ -464,7 +344,7 @@ fun NoteSubtitle() {
                 ),
                 cursorBrush = SolidColor(MaterialTheme.colors.primaryVariant),
                 decorationBox = { innerTextField ->
-                    if (noteSubTitle.isEmpty()) {
+                    if (noteSubTitle.subtitle.isEmpty()) {
                         Text(
                             text = "Note Subtitle",
                             fontSize = 16.sp,
@@ -479,34 +359,6 @@ fun NoteSubtitle() {
 
         }
     }
-
-    /** var noteSubTitle by remember { mutableStateOf(TextFieldValue("")) }
-
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-    ) {
-
-        Box(modifier = Modifier
-            .height(56.dp)
-            .width(10.dp)
-            .background(Color.Green, RoundedCornerShape(6.dp)))
-
-        TextField(
-            value = noteSubTitle,
-            onValueChange = { noteSubTitle = it },
-            textStyle = TextStyle(
-                fontSize = 16.sp
-            ),
-            placeholder = { Text(
-                text = "Note Subtitle",
-                color = Color.LightGray
-            ) },
-            modifier = Modifier
-                .fillMaxWidth()
-        )
-
-    } **/
 }
 
 @Composable

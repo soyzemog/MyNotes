@@ -1,6 +1,5 @@
 package com.example.mynotes.data.domain
 
-import androidx.compose.ui.graphics.Color
 
 data class Note(
     val id: Int? = null,
