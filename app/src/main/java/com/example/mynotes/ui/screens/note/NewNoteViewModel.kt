@@ -34,7 +34,7 @@ class NewNoteViewModel @Inject constructor(
 
         }
 
-    } **/
+    }  **/
 
 
     fun onColorPickChange(action: MiscellaneousOptionsAction) {
@@ -42,11 +42,29 @@ class NewNoteViewModel @Inject constructor(
             is MiscellaneousOptionsAction.OnPickColorClick -> {
                 _state.update {
                     it.copy(
-                        subtitle = SubtitleNote(colorBox = action.color),
-                        miscellaneous = MiscellaneousOptions(selectedOption = action.color)
+                        subtitle = _state.value.subtitle.copy(
+                            colorBox = action.color
+                        ),
+                        miscellaneous = _state.value.miscellaneous.copy(
+                            selectedOption = action.color
+                        )
                     )
                 }
+            }
+        }
+    }
 
+    fun onSubtitleTextChange(action: NewNoteAction) {
+        when (action) {
+            is NewNoteAction.OnSubtitleText -> {
+                _state.update {
+                    it.copy(
+                        //subtitle = SubtitleNote(subtitle = action.text)
+                    subtitle = _state.value.subtitle.copy(
+                        subtitle = action.text
+                    )
+                    )
+                }
             }
         }
     }
@@ -68,3 +86,14 @@ class NewNoteViewModel @Inject constructor(
     miscellaneous = MiscellaneousOptions(selectedOption = action.color)
     )
  */
+
+/**
+ * solucionado en ' fun onColorPickChange(action: MiscellaneousOptionsAction) {} '
+ * - lo mismo q arriba, creaba nuevamente tanto SubtitleNote como MiscellaneousOptions,
+ *  x lo q me volvia a setear algunos valores a x defecto y se perdian los estados
+ *  q seteaba
+ * subtitle = SubtitleNote(
+    colorBox = action.color
+    ),
+    miscellaneous = MiscellaneousOptions(selectedOption = action.color)
+ **/

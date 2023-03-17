@@ -90,7 +90,10 @@ fun NewNoteScreen(
             }
 
             item {
-                NoteSubtitle(noteSubTitle = state.subtitle)
+                NoteSubtitle(
+                    noteSubTitle = state.subtitle,
+                    onAction = { viewModel.onSubtitleTextChange(it) }
+                )
             }
 
             item {
@@ -309,9 +312,10 @@ fun NoteTitle() {
 }
 
 @Composable
-fun NoteSubtitle(noteSubTitle: SubtitleNote) {
-
-    //var noteSubTitle by remember { mutableStateOf("") }
+fun NoteSubtitle(
+    noteSubTitle: SubtitleNote,
+    onAction: (NewNoteAction) -> Unit
+) {
 
     Row(
         modifier = Modifier
@@ -335,7 +339,7 @@ fun NoteSubtitle(noteSubTitle: SubtitleNote) {
             BasicTextField(
                 value = noteSubTitle.subtitle,
                 onValueChange = { newText ->
-                    noteSubTitle.subtitle = newText
+                    onAction(NewNoteAction.OnSubtitleText(newText))
                 },
                 textStyle = TextStyle(
                     fontSize = 16.sp,
