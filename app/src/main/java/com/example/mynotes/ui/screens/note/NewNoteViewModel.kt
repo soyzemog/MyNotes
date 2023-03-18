@@ -54,15 +54,23 @@ class NewNoteViewModel @Inject constructor(
         }
     }
 
-    fun onSubtitleTextChange(action: NewNoteAction) {
+    fun onNewNoteChange(action: NewNoteAction) {
         when (action) {
+            is NewNoteAction.OnTitleText -> {
+                _state.update {
+                    it.copy(
+                        title = _state.value.title.copy(
+                            title = action.text
+                        )
+                    )
+                }
+            }
             is NewNoteAction.OnSubtitleText -> {
                 _state.update {
                     it.copy(
-                        //subtitle = SubtitleNote(subtitle = action.text)
-                    subtitle = _state.value.subtitle.copy(
-                        subtitle = action.text
-                    )
+                        subtitle = _state.value.subtitle.copy(
+                            subtitle = action.text
+                        )
                     )
                 }
             }
@@ -72,6 +80,7 @@ class NewNoteViewModel @Inject constructor(
 
     data class UiState(
         val note: Note = Note(),
+        val title: TitleNote = TitleNote(),
         val subtitle: SubtitleNote = SubtitleNote(),
         val miscellaneous: MiscellaneousOptions = MiscellaneousOptions()
     )

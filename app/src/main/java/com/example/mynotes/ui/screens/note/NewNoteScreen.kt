@@ -86,13 +86,16 @@ fun NewNoteScreen(
         ) {
 
             item {
-                NoteTitle()
+                NoteTitle(
+                    noteTitle = state.title,
+                    onAction = { viewModel.onNewNoteChange(it) }
+                )
             }
 
             item {
                 NoteSubtitle(
                     noteSubTitle = state.subtitle,
-                    onAction = { viewModel.onSubtitleTextChange(it) }
+                    onAction = { viewModel.onNewNoteChange(it) }
                 )
             }
 
@@ -276,14 +279,14 @@ fun AddLink() {
 
 
 @Composable
-fun NoteTitle() {
-
-    var noteTitle by remember { mutableStateOf("") }
-    
+fun NoteTitle(
+    noteTitle: TitleNote,
+    onAction: (NewNoteAction) -> Unit
+) {
     BasicTextField(
-        value = noteTitle,
+        value = noteTitle.title,
         onValueChange = { newText ->
-            noteTitle = newText
+            onAction(NewNoteAction.OnTitleText(newText))
         },
         textStyle = TextStyle(
             fontSize = 24.sp,
@@ -292,7 +295,7 @@ fun NoteTitle() {
         ),
         cursorBrush = SolidColor(MaterialTheme.colors.primaryVariant),
         decorationBox = { innerTextField ->
-            if (noteTitle.isEmpty()) {
+            if (noteTitle.title.isEmpty()) {
                 Text(
                     text = "Note Title",
                     fontSize = 24.sp,
@@ -307,7 +310,7 @@ fun NoteTitle() {
 
     Spacer(modifier = Modifier.padding(4.dp))
 
-    TextDate()
+    TextDate(noteTitle.date)
 
 }
 
@@ -365,6 +368,7 @@ fun NoteSubtitle(
     }
 }
 
+
 @Composable
 fun TypeNote() {
 
@@ -394,6 +398,7 @@ fun TypeNote() {
         }
     )
 }
+
 
 /** @Preview(device = Devices.PIXEL_2)
 @Composable
