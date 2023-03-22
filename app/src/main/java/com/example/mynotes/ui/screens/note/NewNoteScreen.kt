@@ -1,9 +1,6 @@
 package com.example.mynotes.ui.screens.note
 
 
-import android.app.Activity
-import android.content.Context
-import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import android.net.Uri
@@ -11,7 +8,7 @@ import android.os.Build
 import android.provider.MediaStore
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.browser.customtabs.CustomTabsIntent
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -30,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.TextStyle
@@ -37,9 +35,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.mynotes.R
 import com.example.mynotes.ui.component.CustomDialog
 import com.example.mynotes.ui.component.IconAddLink
 import com.example.mynotes.ui.component.TextDate
@@ -115,6 +111,12 @@ fun NewNoteScreen(
                 }
             }
 
+            if (state.image != null) {
+                item {
+                    ImageFromGallery(state.image!!)
+                }
+            }
+
             item {
                 TypeText(
                     typeText = state.typeText,
@@ -143,7 +145,7 @@ fun BottomSheet(
             miscellaneous = miscellaneous,
             onAction = onAction
         )
-        AddImage()
+        AddImage(onAction = onAction)
         AddLink(miscellaneous = miscellaneous, onAction = onAction)
     }
 }
@@ -226,11 +228,11 @@ fun ColorPicker(
 
 
 @Composable
-fun AddImage() {
+fun AddImage(onAction: (MiscellaneousOptionsAction) -> Unit) {
 
     var imageUri by remember { mutableStateOf<Uri?>(null) }
     val context = LocalContext.current
-    val bitmap = remember { mutableStateOf<Bitmap?>(null) }
+    // val bitmap = remember { mutableStateOf<Bitmap?>(null) }
 
     val launcher =
         rememberLauncherForActivityResult(
@@ -241,11 +243,24 @@ fun AddImage() {
 
     imageUri?.let {
         if (Build.VERSION.SDK_INT < 28) {
-            bitmap.value = MediaStore.Images
-                .Media.getBitmap(context.contentResolver, it)
+            /** bitmap.value = MediaStore.Images
+                .Media.getBitmap(context.contentResolver, it) **/
+            // le digo al viewmodel q cambie el estado de image con la imagen seleccionada
+            onAction(
+                MiscellaneousOptionsAction.OnAddImageClick(
+                    MediaStore.Images.Media.getBitmap(
+                        context.contentResolver, it
+                    )
+                )
+            )
         } else {
             val source = ImageDecoder.createSource(context.contentResolver, it)
-            bitmap.value = ImageDecoder.decodeBitmap(source)
+            /** bitmap.value = ImageDecoder.decodeBitmap(source) **/
+            onAction(
+                MiscellaneousOptionsAction.OnAddImageClick(
+                    ImageDecoder.decodeBitmap(source)
+                )
+            )
         }
     }
 
@@ -434,6 +449,15 @@ fun RowLink(
             )
         }
     }
+}
+
+
+@Composable
+fun ImageFromGallery(image: Bitmap) {
+    Image(
+        bitmap = image.asImageBitmap(),
+        contentDescription = null
+    )
 }
 
 

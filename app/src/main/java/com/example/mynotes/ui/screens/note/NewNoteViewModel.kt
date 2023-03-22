@@ -3,6 +3,7 @@ package com.example.mynotes.ui.screens.note
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
 import android.net.Uri
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.content.ContextCompat
@@ -76,6 +77,13 @@ class NewNoteViewModel @Inject constructor(
                 _state.update {
                     it.copy(
                         url = action.url
+                    )
+                }
+            }
+            is MiscellaneousOptionsAction.OnAddImageClick -> {
+                _state.update {
+                    it.copy(
+                        image = action.image
                     )
                 }
             }
@@ -184,6 +192,7 @@ class NewNoteViewModel @Inject constructor(
         val title: TitleNote = TitleNote(),
         val subtitle: SubtitleNote = SubtitleNote(),
         var url: String = "",
+        var image: Bitmap? = null,
         var typeText: String = "",
         val miscellaneous: MiscellaneousOptions = MiscellaneousOptions()
     )
