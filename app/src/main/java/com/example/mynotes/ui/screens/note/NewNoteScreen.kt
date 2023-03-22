@@ -1,6 +1,9 @@
 package com.example.mynotes.ui.screens.note
 
 
+import android.app.Activity
+import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import android.net.Uri
@@ -8,6 +11,7 @@ import android.os.Build
 import android.provider.MediaStore
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -33,7 +37,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.mynotes.R
 import com.example.mynotes.ui.component.CustomDialog
 import com.example.mynotes.ui.component.IconAddLink
 import com.example.mynotes.ui.component.TextDate
@@ -57,8 +63,9 @@ fun NewNoteScreen(
     viewModel: NewNoteViewModel = hiltViewModel()
 ) {
 
-    val state by viewModel.state.collectAsState()
+    val ctx = LocalContext.current
 
+    val state by viewModel.state.collectAsState()
 
     val sheetState = rememberBottomSheetState(
         initialValue = BottomSheetValue.Collapsed
@@ -69,10 +76,9 @@ fun NewNoteScreen(
 
     BottomSheetScaffold(
         sheetContent = {
-            //BottomSheet(state, viewModel)
             BottomSheet(
                 miscellaneous = state.miscellaneous,
-                onAction = { viewModel.onColorPickChange(it) }
+                onAction = { viewModel.onMiscellaneousOptionsChange(it) }
             )
         },
         sheetPeekHeight = 50.dp,
@@ -99,8 +105,21 @@ fun NewNoteScreen(
                 )
             }
 
+            if (state.url.isNotEmpty()) {
+                item {
+                    RowLink(
+                        url = state.url,
+                        onDelete = { viewModel.clearUrl() },
+                        onAction = { viewModel.openTab(ctx, state.url) }
+                    )
+                }
+            }
+
             item {
-                TypeNote()
+                TypeText(
+                    typeText = state.typeText,
+                    onAction = { viewModel.onNewNoteChange(it) }
+                )
             }
 
         }
@@ -120,9 +139,12 @@ fun BottomSheet(
     ) {
         HeaderSheet()
         Spacer(modifier = Modifier.padding(8.dp))
-        ColorPicker(miscellaneous, onAction)
+        ColorPicker(
+            miscellaneous = miscellaneous,
+            onAction = onAction
+        )
         AddImage()
-        AddLink()
+        AddLink(miscellaneous = miscellaneous, onAction = onAction)
     }
 }
 
@@ -164,7 +186,13 @@ fun ColorPicker(
                             .padding(end = 16.dp)
                             .selectable(
                                 selected = (miscellaneous.selectedOption == color),
-                                onClick = { onAction(MiscellaneousOptionsAction.OnPickColorClick(color)) },
+                                onClick = {
+                                    onAction(
+                                        MiscellaneousOptionsAction.OnPickColorClick(
+                                            color
+                                        )
+                                    )
+                                },
                                 role = Role.RadioButton
                             )
                             .size(40.dp)
@@ -258,21 +286,25 @@ fun AddImage() {
 
 
 @Composable
-fun AddLink() {
-
-    var showModal by remember { mutableStateOf(false) }
-
+fun AddLink(
+    miscellaneous: MiscellaneousOptions,
+    onAction: (MiscellaneousOptionsAction) -> Unit
+) {
     Row(
         modifier = Modifier
             .padding(start = 16.dp, top = 20.dp)
-            .clickable { showModal = true },
+            .clickable { onAction(MiscellaneousOptionsAction.OnAddLinkClick(true)) },
         verticalAlignment = Alignment.CenterVertically
     ) {
         IconAddLink(MaterialTheme.colors.onPrimary)
     }
 
-    CustomDialog(showModal) {
-        showModal = false
+    CustomDialog(
+        show = miscellaneous.showModal,
+        url = miscellaneous.url,
+        onAction = onAction
+    ) {
+        onAction(MiscellaneousOptionsAction.OnAddLinkClick(false))
     }
 
 }
@@ -370,14 +402,50 @@ fun NoteSubtitle(
 
 
 @Composable
-fun TypeNote() {
+fun RowLink(
+    url: String,
+    onDelete: () -> Unit,
+    onAction: () -> Unit
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        TextButton(
+            onClick = onAction,
+            colors = ButtonDefaults.textButtonColors(
+                contentColor = MaterialTheme.colors.primaryVariant
+            )
+        ) {
+            Text(
+                text = url,
+                fontSize = 16.sp,
+                textDecoration = TextDecoration.Underline,
+                maxLines = 2
+            )
+        }
+        IconButton(onClick = onDelete) {
+            Icon(
+                imageVector = Icons.Default.Delete,
+                contentDescription = "Delete",
+                tint = Color.Red,
+                modifier = Modifier.size(32.dp)
+            )
+        }
+    }
+}
 
-    var note by remember { mutableStateOf("") }
 
+@Composable
+fun TypeText(
+    typeText: String,
+    onAction: (NewNoteAction) -> Unit
+) {
     BasicTextField(
-        value = note,
+        value = typeText,
         onValueChange = { newText ->
-            note = newText
+            onAction(NewNoteAction.OnTypeText(newText))
         },
         textStyle = TextStyle(
             fontSize = 16.sp,
@@ -386,7 +454,7 @@ fun TypeNote() {
         ),
         cursorBrush = SolidColor(MaterialTheme.colors.primaryVariant),
         decorationBox = { innerTextField ->
-            if (note.isEmpty()) {
+            if (typeText.isEmpty()) {
                 Text(
                     text = "Type note here..",
                     fontSize = 16.sp,

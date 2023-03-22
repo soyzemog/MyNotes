@@ -8,5 +8,7 @@ data class MiscellaneousOptions(
         ColorPick.CYAN,
         ColorPick.MAGENTA
     ),
-    var selectedOption : ColorPick = radioOptions[0]
+    var selectedOption : ColorPick = radioOptions[0],
+    var showModal: Boolean = false,
+    var url: String = ""
 )

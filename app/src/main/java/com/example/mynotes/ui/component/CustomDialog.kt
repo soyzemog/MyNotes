@@ -12,22 +12,20 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.example.mynotes.ui.screens.note.MiscellaneousOptionsAction
 
 @Composable
 fun CustomDialog(
     show: Boolean,
+    url: String,
+    onAction: (MiscellaneousOptionsAction) -> Unit,
     onDismiss: () -> Unit
 ) {
-
-    var url by remember { mutableStateOf("") }
-
     if (show) {
-
         Dialog(
             onDismissRequest = onDismiss,
             properties = DialogProperties(
@@ -56,7 +54,7 @@ fun CustomDialog(
                 BasicTextField(
                     value = url,
                     onValueChange = { newText ->
-                        url = newText
+                        onAction(MiscellaneousOptionsAction.OnTextLinkClick(newText))
                     },
                     textStyle = TextStyle(
                         fontSize = 16.sp,
@@ -94,7 +92,10 @@ fun CustomDialog(
                     }
                     Spacer(modifier = Modifier.padding(8.dp))
                     TextButton(
-                        onClick = { /*TODO*/ },
+                        onClick = {
+                            onAction(MiscellaneousOptionsAction.OnAddLinkToNoteClick(url))
+                            onDismiss()
+                                  },
                         colors = ButtonDefaults.textButtonColors(
                             contentColor = MaterialTheme.colors.primaryVariant
                         )
