@@ -11,11 +11,11 @@ fun NoteEntity.toDomain(): Note {
         id = this.id ?: throw Exception(),
         title = this.title,
         subtitle = this.subtitle,
-        date = this.date,
-        image = this.image,
-        link = this.link,
-        size = this.size,
-        color = this.color
+        //date = this.date,
+        //image = this.image,
+        //url = this.url,
+        //size = this.size,
+        //color = this.color
     )
 }
 
@@ -27,10 +27,10 @@ fun Note.toEntity(): NoteEntity {
         id = this.id,
         title = this.title,
         subtitle = this.subtitle,
-        date = this.date,
-        image = this.image,
-        link = this.link,
-        size = this.size,
-        color = this.color
+        //date = this.date,
+        //image = this.image,
+        //url = this.url,
+        //size = this.size,
+        //color = this.color
     )
 }

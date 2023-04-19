@@ -59,9 +59,9 @@ fun NewNoteScreen(
     viewModel: NewNoteViewModel = hiltViewModel()
 ) {
 
-    val ctx = LocalContext.current
-
     val state by viewModel.state.collectAsState()
+
+    val ctx = LocalContext.current
 
     val sheetState = rememberBottomSheetState(
         initialValue = BottomSheetValue.Collapsed

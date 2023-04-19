@@ -1,9 +1,10 @@
 package com.example.mynotes.data.local.entities
 
-import androidx.compose.ui.graphics.Color
+import android.graphics.Bitmap
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import androidx.room.TypeConverter
+import androidx.room.TypeConverters
+import com.example.mynotes.ui.screens.note.ColorPick
 
 @Entity
 data class NoteEntity(
@@ -11,9 +12,8 @@ data class NoteEntity(
     val id: Int? = null,
     val title: String?,
     val subtitle: String?,
-    val date: String?,
-    val image: String?,
-    val link: String?,
-    val size: Int?,
-    val color: Int?
+    //val date: String?,
+    //val image: Bitmap?,
+    //val url: String?,
+    //val color: ColorPick?
 )

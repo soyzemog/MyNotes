@@ -25,7 +25,7 @@ fun NoteItem(note: Note) {
     Card(
         modifier = Modifier.clickable { },
         shape = MaterialTheme.shapes.large,
-        backgroundColor = Color(note.color!!)
+        backgroundColor = note.color!!.color
     ) {
         Column(
             modifier = Modifier
@@ -33,14 +33,14 @@ fun NoteItem(note: Note) {
                 .padding(bottom = 10.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            if (note.image?.isNotEmpty() == true) {
+            if (note.image != null) {
                 Image(
                     painter = painterResource(id = R.drawable.ic_launcher_foreground),
                     contentDescription = "image",
                     modifier = Modifier
                         .background(Color.LightGray)
                         .fillMaxWidth()
-                        .height(note.size!!.dp)
+                        //.height(note.size!!.dp)
                 )
             }
             Column(

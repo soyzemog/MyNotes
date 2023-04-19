@@ -1,21 +1,28 @@
 package com.example.mynotes.ui.component
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
+
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.mynotes.ui.AppMyNotesState
+import com.example.mynotes.ui.screens.note.NewNoteViewModel
 
 @Composable
-fun TopBar(appState: AppMyNotesState) {
+fun TopBar(
+    appState: AppMyNotesState,
+    viewModel: NewNoteViewModel = hiltViewModel()
+) {
+
+    val state by viewModel.state.collectAsState()
 
     TopAppBar(
         title = {
@@ -45,7 +52,9 @@ fun TopBar(appState: AppMyNotesState) {
         actions = {
             if (appState.showAction) {
                 IconButton(
-                    onClick = { }
+                    onClick = {
+                        viewModel.saveNote()
+                    }
                 ) {
                     Icon(
                         imageVector = Icons.Default.TaskAlt,

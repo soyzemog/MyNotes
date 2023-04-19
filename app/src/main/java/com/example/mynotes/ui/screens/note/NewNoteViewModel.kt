@@ -5,9 +5,11 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
+import android.util.Log
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.mynotes.R
 import com.example.mynotes.data.domain.Note
 import com.example.mynotes.data.repositories.NoteRepository
@@ -16,6 +18,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -186,9 +189,35 @@ class NewNoteViewModel @Inject constructor(
         }
     }
 
+    fun saveNote() {
+        _state.update {
+            it.copy(
+                note = _state.value.note.copy(
+                    id = _state.value.id,
+                    title = _state.value.title.title,
+                    subtitle = _state.value.subtitle.subtitle,
+                    //_state.value.title.date,
+                    //_state.value.image,
+                    //_state.value.url,
+                    //_state.value.subtitle.colorBox
+                )
+            )
+        }
+
+        val TAG = "MyActivity"
+        Log.d(TAG, "---------- TITLE :  ${_state.value.title.title.toString()}")
+
+        Log.d(TAG, "---------- SUBTITLE :  ${_state.value.subtitle.subtitle.toString()}")
+
+        viewModelScope.launch {
+            noteRepository.insertNote(_state.value.note)
+        }
+    }
+
 
     data class UiState(
         val note: Note = Note(),
+        val id: Int? = null,
         val title: TitleNote = TitleNote(),
         val subtitle: SubtitleNote = SubtitleNote(),
         var url: String = "",
