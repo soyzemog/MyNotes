@@ -203,12 +203,6 @@ class NewNoteViewModel @Inject constructor(
                 )
             )
         }
-
-        val TAG = "MyActivity"
-        Log.d(TAG, "---------- TITLE :  ${_state.value.title.title.toString()}")
-
-        Log.d(TAG, "---------- SUBTITLE :  ${_state.value.subtitle.subtitle.toString()}")
-
         viewModelScope.launch {
             noteRepository.insertNote(_state.value.note)
         }

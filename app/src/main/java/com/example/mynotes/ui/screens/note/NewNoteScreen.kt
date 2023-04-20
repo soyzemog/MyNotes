@@ -39,6 +39,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.mynotes.ui.component.CustomDialog
 import com.example.mynotes.ui.component.IconAddLink
 import com.example.mynotes.ui.component.TextDate
+import com.example.mynotes.ui.component.TopBar
 
 
 enum class ColorPick(
@@ -56,6 +57,7 @@ enum class ColorPick(
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun NewNoteScreen(
+    onClickBackStack: () -> Unit,
     viewModel: NewNoteViewModel = hiltViewModel()
 ) {
 
@@ -79,51 +81,56 @@ fun NewNoteScreen(
         },
         sheetPeekHeight = 50.dp,
         sheetShape = RoundedCornerShape(16.dp),
-        scaffoldState = scaffoldState
-    ) {
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(8.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
+        scaffoldState = scaffoldState,
+        topBar = {
+            TopBar(onClickBackStack) { viewModel.saveNote() }
+        }
+    ) { padding ->
+        Box(modifier = Modifier.padding(padding)) {
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(8.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
 
-            item {
-                NoteTitle(
-                    noteTitle = state.title,
-                    onAction = { viewModel.onNewNoteChange(it) }
-                )
-            }
-
-            item {
-                NoteSubtitle(
-                    noteSubTitle = state.subtitle,
-                    onAction = { viewModel.onNewNoteChange(it) }
-                )
-            }
-
-            if (state.url.isNotEmpty()) {
                 item {
-                    RowLink(
-                        url = state.url,
-                        onDelete = { viewModel.clearUrl() },
-                        onAction = { viewModel.openTab(ctx, state.url) }
+                    NoteTitle(
+                        noteTitle = state.title,
+                        onAction = { viewModel.onNewNoteChange(it) }
                     )
                 }
-            }
 
-            if (state.image != null) {
                 item {
-                    ImageFromGallery(state.image!!)
+                    NoteSubtitle(
+                        noteSubTitle = state.subtitle,
+                        onAction = { viewModel.onNewNoteChange(it) }
+                    )
                 }
-            }
 
-            item {
-                TypeText(
-                    typeText = state.typeText,
-                    onAction = { viewModel.onNewNoteChange(it) }
-                )
-            }
+                if (state.url.isNotEmpty()) {
+                    item {
+                        RowLink(
+                            url = state.url,
+                            onDelete = { viewModel.clearUrl() },
+                            onAction = { viewModel.openTab(ctx, state.url) }
+                        )
+                    }
+                }
 
+                if (state.image != null) {
+                    item {
+                        ImageFromGallery(state.image!!)
+                    }
+                }
+
+                item {
+                    TypeText(
+                        typeText = state.typeText,
+                        onAction = { viewModel.onNewNoteChange(it) }
+                    )
+                }
+
+            }
         }
     }
 }

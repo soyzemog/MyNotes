@@ -4,6 +4,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
 import com.example.mynotes.ui.component.BottomBar
 import com.example.mynotes.ui.component.FloatingButton
 import com.example.mynotes.ui.component.TopBar
@@ -19,7 +22,19 @@ fun AppMyNotes() {
     ScreenMyNotes {
         Scaffold(
             topBar = {
-                TopBar(appState)
+                //TopBar(appState)
+                     TopAppBar(
+                         title = {
+                             Text(
+                                 text = "My Notes",
+                                 color = Color.White,
+                                 fontSize = 24.sp,
+                                 fontWeight = FontWeight.Bold,
+                                 modifier = Modifier.fillMaxWidth()
+                             )
+                         },
+                         backgroundColor = MaterialTheme.colors.background
+                     )
             },
             floatingActionButton = {
                 if (appState.showFloatingButton) {

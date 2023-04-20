@@ -20,7 +20,7 @@ fun Navigation(navController: NavHostController) {
 }
 
 
-private fun NavGraphBuilder.notesNav(navController: NavHostController) {
+private fun NavGraphBuilder.notesNav(navController: NavController) {
     navigation(
         startDestination = NavCommand.ContentType(Feature.NOTES).route,
         route = Feature.NOTES.route
@@ -35,7 +35,7 @@ private fun NavGraphBuilder.notesNav(navController: NavHostController) {
 }
 
 
-private fun NavGraphBuilder.newNoteNav(navController: NavHostController) {
+private fun NavGraphBuilder.newNoteNav(navController: NavController) {
     navigation(
         startDestination = NavCommand.ContentType(Feature.NEWNOTE).route,
         route = Feature.NEWNOTE.route
@@ -43,7 +43,7 @@ private fun NavGraphBuilder.newNoteNav(navController: NavHostController) {
 
         composable(NavCommand.ContentType(Feature.NEWNOTE)) {
 
-            NewNoteScreen()
+            NewNoteScreen(onClickBackStack = { navController.popBackStack() } )
 
         }
 
