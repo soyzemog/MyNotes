@@ -9,12 +9,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.example.mynotes.ui.component.BottomBar
 import com.example.mynotes.ui.component.FloatingButton
-import com.example.mynotes.ui.component.TopBar
 import com.example.mynotes.ui.navigation.Navigation
 import com.example.mynotes.ui.theme.MyNotesTheme
 
 
-@Composable
+/** @Composable
 fun AppMyNotes() {
 
     val appState = rememberAppMyNotesState()
@@ -70,4 +69,4 @@ fun ScreenMyNotes(content: @Composable () -> Unit) {
             content()
         }
     }
-}
+} **/
